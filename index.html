@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manžel OS v2.2 (Domky Gift)</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --text-main: #c9d1d9;
+            --accent: #58a6ff;
+            --green: #2ea043;
+            --red: #da3633;
+            --border: #30363d;
+        }
+
+        body.light-mode {
+            --bg-color: #ffffff;
+            --card-bg: #f6f8fa;
+            --text-main: #24292f;
+            --border: #d0d7de;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        h1 { color: var(--accent); text-align: center; margin-bottom: 5px; }
+        
+        .header-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        .system-status {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: var(--border);
+            border-radius: 5px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--green);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .ticket {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 20px;
+            position: relative;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .ticket:hover { 
+            border-color: var(--accent); 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .tag-dev { background: #1f6feb; color: white; }
+        .tag-health { background: #238636; color: white; }
+        .tag-love { background: #d2a8ff; color: #4c1d95; }
+        .tag-special { background: #f97316; color: #1f2937; }
+
+        .ticket h3 { margin-top: 5px; margin-bottom: 5px; color: var(--text-main); }
+        .ticket p { font-size: 0.9em; line-height: 1.5; color: #8b949e; }
+
+        .btn {
+            background-color: var(--green);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+            width: 100%;
+            font-family: inherit;
+        }
+
+        .redeemed { opacity: 0.6; border-style: dashed; }
+        .redeemed h3 { text-decoration: line-through; }
+        .redeemed .btn { background-color: #30363d; cursor: not-allowed; }
+
+        /* Špeciálny kupón pre teba – iný vzhľad */
+        .ticket.special {
+            border-color: #f97316;
+            background: radial-gradient(circle at top left, #f97316 0, #581c87 45%, #0d1117 100%);
+        }
+        .ticket.special:hover {
+            box-shadow: 0 4px 16px rgba(249,115,22,0.6);
+        }
+
+        .footer { margin-top: 40px; font-size: 0.8em; color: #8b949e; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div class="header-controls" onclick="toggleTheme()">🌓</div>
+
+    <h1>MANŽEL_OS v2.2</h1>
+    <p style="color: #8b949e; margin-top:0;">Build: 2025.12.24 | Branch: love/main</p>
+
+    <div class="system-status">
+        <div>
+            <strong>🔋 System Energy:</strong> <span id="energy-val">Loading...</span>
+        </div>
+        <div>
+            <strong>❤️ Love Metrics:</strong> Stable
+        </div>
+        <div style="width: 100%;">
+            <small>Optimization Progress:</small>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="ticket-container">
+        <!-- Tickety -->
+    </div>
+
+    <div class="footer">
+        Console tip: Stlač F12 pre skrytú správu ;)
+    </div>
+
+    <script>
+        // === KUPÓNY, KTORÉ CHCEŠ PONECHAŤ ===
+        const tickets = [
+            {
+                id: 1,
+                tag: "DEV",
+                tagClass: "tag-dev",
+                title: "AI/n8n/Work Deep Dive",
+                desc: "2–3 hodiny absolútneho ticha. Deti sú preč. Ty máš flow. Ideálne na debugovanie AI agenta, ladenie ETF/krypto stratégií alebo hľadanie dream job."
+            },
+            {
+                id: 2,
+                tag: "HEALTH",
+                tagClass: "tag-health",
+                title: "Liver Detox Menu",
+                desc: "Víkendový špeciál: Navarím ti 'pečienkovo-friendly' jedlo, ktoré bude fakt chutiť."
+            },
+            {
+                id: 4,
+                tag: "HEALTH",
+                tagClass: "tag-health",
+                title: "Partner Workout",
+                desc: "Spoločný strečing aspoň 15 minút — ideálne v posteli. Potrebné vybavenie: ty + ja + minimum oblečenia. Vedľajšie účinky: zrýchlený tep, smiech a chuť na predĺženie tréningu 🤭."
+            },
+            {
+                id: 5,
+                tag: "LOVE",
+                tagClass: "tag-love",
+                title: "Masáž 'No-Stress'",
+                desc: "Keď ti zlyhá build alebo padne server. 15-minútová masáž šije a hlavy. Okamžitý deploy."
+            },
+            {
+                id: 6,
+                tag: "LOVE",
+                tagClass: "tag-love",
+                title: "Safe Space Debug",
+                desc: "30 minút, kde sa môžeš len vyrozprávať z toho, čo ťa štve (práca, zdravie, únava). Žiadne rady, len počúvanie a objatie."
+            },
+            // ŠPECIÁLNY KUPÓN PRE TEBA
+            {
+                id: 7,
+                tag: "SPECIAL",
+                tagClass: "tag-special",
+                title: "Špeciál pre mňa: Odpojený Dominik, pripojená manželka",
+                desc: "24 hodín OFFLINE (bez mobilu a notebooku), ale zato so mnou. Tento kupón je pre mňa – uplatňujem ho JA, keď nastane správny čas (prenesené z r.2024 a.k.a digitalizácia v praxi). :)",
+                special: true
+            }
+        ];
+
+        const container = document.getElementById('ticket-container');
+        const progressFill = document.getElementById('progress');
+        const energyVal = document.getElementById('energy-val');
+
+        function renderTickets() {
+            container.innerHTML = '';
+            let redeemedCount = 0;
+
+            tickets.forEach(ticket => {
+                const isRedeemed = localStorage.getItem(`ticket_v3_${ticket.id}`);
+                if (isRedeemed) redeemedCount++;
+                
+                const ticketDiv = document.createElement('div');
+                ticketDiv.className = `ticket ${isRedeemed ? 'redeemed' : ''} ${ticket.special ? 'special' : ''}`;
+                
+                ticketDiv.innerHTML = `
+                    <span class="tag ${ticket.tagClass}">${ticket.tag}</span>
+                    <h3>${ticket.title}</h3>
+                    <p>${ticket.desc}</p>
+                    <button class="btn" onclick="redeem(${ticket.id})">
+                        ${isRedeemed ? 'DEPLOYED ✅' : (ticket.special ? 'Uplatňuje manželka 💜' : 'EXECUTE')}
+                    </button>
+                `;
+                container.appendChild(ticketDiv);
+            });
+
+            const percentage = (redeemedCount / tickets.length) * 100;
+            progressFill.style.width = `${percentage}%`;
+            
+            if(percentage === 0) energyVal.innerText = "Low (Needs Action)";
+            else if(percentage < 50) energyVal.innerText = "Charging...";
+            else energyVal.innerText = "Optimized 🚀";
+        }
+
+        function redeem(id) {
+            if(!localStorage.getItem(`ticket_v3_${id}`)) {
+                if(!confirm("Spustiť tento proces? (Nedá sa vrátiť späť v tomto prehliadači)")) return;
+                localStorage.setItem(`ticket_v3_${id}`, 'true');
+                renderTickets();
+                console.log(`%c [SUCCESS] Ticket #${id} bol úspešne uplatnený!`, 'color: #2ea043; font-weight: bold;');
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+        }
+
+        console.log("%c AHOJ LÁSKA! ❤️", "font-size: 30px; color: #ff0000; font-weight: bold;");
+        console.log("Ak toto čítaš, tak sa vŕtaš v kóde namiesto toho, aby si ma objal. :D");
+        console.log("Tento kód je open-source, ale moje srdce máš licencované len ty.");
+
+        renderTickets();
+    </script>
+</body>
+</html>
