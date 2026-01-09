@@ -29,10 +29,10 @@
         /* --- HERO SEKCIA (Úvod) --- */
         .hero {
             height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('IMG_5626.jpg'); /* TU SI ZMEŇ NÁZOV SÚBORU */
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('68619321_2302744033135451_6140377604785438720_n.jpg'); /* NOVÁ HERO FOTKA */
             background-size: cover;
             background-position: center;
-            background-attachment: fixed; /* Parallax efekt */
+            background-attachment: fixed;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -41,13 +41,24 @@
             position: relative;
         }
 
+        .hero-content {
+            z-index: 2;
+            animation: fadeInDown 1.5s ease;
+        }
+
+        .logo-hero {
+            width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 30px rgba(255, 0, 85, 0.6));
+        }
+
         .hero h1 {
             font-size: 5rem;
             margin: 0;
             letter-spacing: 5px;
             font-weight: 800;
             text-transform: uppercase;
-            animation: fadeInDown 1.5s ease;
         }
 
         .hero h2 {
@@ -97,18 +108,18 @@
         }
 
         /* --- HUDBA & VIDEO --- */
-        .music-section {
+        .media-section {
             background: #111;
             padding: 80px 20px;
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 40px;
-            align-items: center;
+            align-items: start;
         }
 
         @media (max-width: 768px) {
@@ -123,13 +134,57 @@
             padding-left: 15px;
         }
 
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .video-item {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+
+        .video-item h4 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .video-item p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin: 0 0 15px 0;
+        }
+
+        .video-item iframe {
+            width: 100%;
+            height: 250px;
+            border-radius: 5px;
+            border: none;
+        }
+
         /* --- FOTOGALÉRIA --- */
+        .gallery-section {
+            padding: 80px 20px;
+            background: #000;
+        }
+
+        .gallery-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: var(--primary-color);
+        }
+
         .gallery {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 10px;
-            padding: 10px;
-            background: #000;
+            gap: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .gallery img {
@@ -138,12 +193,14 @@
             object-fit: cover;
             filter: grayscale(80%);
             transition: 0.5s;
+            border-radius: 5px;
         }
 
         .gallery img:hover {
             filter: grayscale(0%);
             transform: scale(1.02);
             z-index: 10;
+            box-shadow: 0 0 30px rgba(255, 0, 85, 0.5);
         }
 
         /* --- FOOTER & LINKS --- */
@@ -159,11 +216,13 @@
             justify-content: center;
             gap: 30px;
             margin-bottom: 30px;
+            flex-wrap: wrap;
         }
 
         .social-links a {
             font-size: 1.2rem;
             border-bottom: 1px solid transparent;
+            padding: 10px 15px;
         }
 
         .social-links a:hover {
@@ -177,6 +236,13 @@
             padding: 15px 30px;
             font-weight: bold;
             display: inline-block;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .contact-btn:hover {
+            background: var(--primary-color);
+            color: white;
         }
 
         /* --- ANIMÁCIE --- */
@@ -190,9 +256,11 @@
 
     <!-- HERO SECTION -->
     <header class="hero">
-        <h1>DJ ZANA</h1>
-        <h2>Evolution of LayDee Sue</h2>
-        <a href="#music" class="hero-btn">Listen to Sets</a>
+        <div class="hero-content">
+            <h1>DJ ZANA</h1>
+            <h2>Evolution of LayDee Sue</h2>
+            <a href="#videos" class="hero-btn">Watch & Listen</a>
+        </div>
     </header>
 
     <!-- BIO SECTION -->
@@ -204,60 +272,88 @@
             <br><br>
             My sound has evolved into a sophisticated blend of <strong>Afro House, Tech House, and Deep Tech</strong>.
             It's not just about mixing tracks; it's about curating an atmosphere where emotion meets energy.
-            From the clubs of Slovakia to private VIP events, I bring a unique, mature, and vibrant energy to every performance.
+            From the clubs of Slovakia to international venues, I bring a unique, mature, and vibrant energy to every performance.
         </p>
     </section>
 
-    <!-- MUSIC & VIDEO GRID -->
-    <section id="music" class="music-section">
+    <!-- VIDEOS SECTION -->
+    <section id="videos" class="media-section">
         <div class="container">
-            <!-- SOUNDCLOUD -->
-            <div class="music-block">
+            <!-- LEFT: VIDEOS -->
+            <div>
+                <h2 class="section-title">Video Moments</h2>
+                <div class="video-grid">
+                    <!-- Video 1 -->
+                    <div class="video-item">
+                        <h4>Ministry of Fun Promo</h4>
+                        <p>Teaser z Ministry of Fun - pozri si môj vibe</p>
+                        <iframe src="https://www.youtube.com/embed/YPd0vg_yuhc" title="LayDee Sue Ministry of Fun" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+
+                    <!-- Video 2 -->
+                    <div class="video-item">
+                        <h4>Beats4Love Live @ Ostrava</h4>
+                        <p>Live performance - energia a sila pred publikom</p>
+                        <iframe src="https://www.youtube.com/embed/sbxBXVWrOa0?start=429" title="Beats4Love LayDee Sue Ostrava" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: SOUNDCLOUD -->
+            <div>
                 <h2 class="section-title">Latest Vibes</h2>
-                <p style="color:#aaa; margin-bottom:20px;">Ponorte sa do môjho sveta. Moje sety sú cesta.</p>
-                <!-- Tu vlož Embed kód zo SoundCloud. Toto je demo iframe -->
-                <iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" 
+                <p style="color:#aaa; margin-bottom:20px;">Ponorte sa do môjho sveta. Moje sety sú cesta emócií a energie.</p>
+                <iframe width="100%" height="450" scrolling="no" frameborder="no" allow="autoplay" 
                 src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/laydeesue&color=%23ff0055&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
                 
                 <br><br>
-                <a href="https://soundcloud.com/laydeesue" target="_blank" style="color:var(--primary-color); font-weight:bold;">→ Explore all sets on SoundCloud</a>
-            </div>
-
-            <!-- YOUTUBE -->
-            <div class="video-block">
-                <h2 class="section-title">Visual Experience</h2>
-                <p style="color:#aaa; margin-bottom:20px;">Live momenty a atmosféra z akcií.</p>
-                <!-- Tu vlož Embed kód z YouTube -->
-                <iframe width="100%" height="300" src="https://www.youtube.com/embed/videoseries?list=PL_TVOJE_VLASTNY_LIST" 
-                title="DJ ZANA Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                
-                <br><br>
-                <a href="https://www.youtube.com/@LayDeeSue" target="_blank" style="color:var(--primary-color); font-weight:bold;">→ Watch more on YouTube</a>
+                <a href="https://soundcloud.com/laydeesue" target="_blank" style="color:var(--primary-color); font-weight:bold; font-size:1.1rem;">→ Všetky sety na SoundCloud</a>
             </div>
         </div>
     </section>
 
-    <!-- GALLERY (Tvoje fotky) -->
-    <section class="gallery">
-        <!-- Uprav názvy súborov podľa toho, ako ich máš uložené -->
-        <img src="IMG_5647.jpg" alt="DJ ZANA Smile">
-        <img src="IMG_5657.jpg" alt="DJ ZANA Headphones">
-        <img src="IMG_5626.jpg" alt="DJ ZANA Profile">
+    <!-- GALLERY -->
+    <section class="gallery-section">
+        <h2 class="gallery-title">Gallery</h2>
+        <div class="gallery">
+            <img src="IMG_5626.jpg" alt="DJ ZANA Profile">
+            <img src="IMG_5647.jpg" alt="DJ ZANA Smile">
+            <img src="IMG_5657.jpg" alt="DJ ZANA Headphones">
+            <img src="68619321_2302744033135451_6140377604785438720_n.jpg" alt="DJ ZANA Live at Sundance">
+            <img src="foto-1.jpg" alt="DJ ZANA 1">
+<img src="foto-2.jpg" alt="DJ ZANA 2">
+<img src="foto-3.jpg" alt="DJ ZANA 3">
+<img src="foto-4.jpg" alt="DJ ZANA 4">
+<img src="foto-5.jpg" alt="DJ ZANA 5">
+<img src="foto-6.jpg" alt="DJ ZANA 6">
+<img src="foto-7.jpg" alt="DJ ZANA 7">
+<img src="foto-8.jpg" alt="DJ ZANA 8">
+<img src="foto-9.jpg" alt="DJ ZANA 9">
+<img src="foto-10.jpg" alt="DJ ZANA 10">
+<img src="foto-11.jpg" alt="DJ ZANA 11">
+<img src="foto-12.jpg" alt="DJ ZANA 12">
+<img src="foto-13.jpg" alt="DJ ZANA 13">
+<img src="foto-14.jpg" alt="DJ ZANA 14">
+<img src="foto-15.jpg" alt="DJ ZANA 15">
+<img src="foto-16.jpg" alt="DJ ZANA 16">
+<img src="foto-17.jpg" alt="DJ ZANA 17">
+        </div>
     </section>
 
     <!-- FOOTER / CONTACT -->
     <footer>
         <div class="social-links">
-            <a href="https://www.facebook.com/laydeesue" target="_blank">FACEBOOK</a>
-            <a href="https://www.instagram.com/laydeesue" target="_blank">INSTAGRAM</a>
-            <a href="https://www.linkedin.com/in/zuzana-ganovska" target="_blank">LINKEDIN</a>
+            <a href="https://www.facebook.com/laydeesue" target="_blank">🎵 FACEBOOK</a>
+            <a href="https://www.instagram.com/laydeesue" target="_blank">📸 INSTAGRAM</a>
+            <a href="https://www.linkedin.com/in/zuzana-ganovska" target="_blank">💼 LINKEDIN</a>
+            <a href="https://soundcloud.com/laydeesue" target="_blank">🎧 SOUNDCLOUD</a>
         </div>
         
-        <h2 style="margin-bottom: 30px;">Ready to vibe?</h2>
-        <a href="mailto:tvojemail@example.com" class="contact-btn">BOOK DJ ZANA</a>
+        <h2 style="margin-bottom: 30px;">Ready to vibe with ZANA?</h2>
+        <a href="mailto:kontakt@djzana.sk" class="contact-btn">BOOK DJ ZANA</a>
         
         <p style="margin-top:50px; color:#444; font-size:0.8rem;">
-            &copy; 2026 DJ ZANA. All rights reserved. <br> Created with creative energy.
+            &copy; 2026 DJ ZANA. All rights reserved. <br> Created with creative energy. <br> Evolution of LayDee Sue
         </p>
     </footer>
 
